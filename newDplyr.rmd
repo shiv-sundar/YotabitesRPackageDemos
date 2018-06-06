@@ -65,13 +65,13 @@ Data can be sorted by using the `arrange()` function. It sorts using by using th
 ```{r}
 head(arrange(worldCountries1, Population))
 head(worldCountries1 %>%
-  arrange(desc(Phones..per.1000.)))
+  arrange(Phones..per.1000.))
 ```
 
 We just saw the first use of the pipe operator! In English, we took the data frame `worldCountries1`, **then** arranged its data by the values in the `Phones..per.1000.` column. We can accomplish this task without using the pipe operator as well.
 
 ```{r}
-head(arrange(worldCountries1, desc(Phones..per.1000.)))
+head(arrange(worldCountries1, Phones..per.1000.))
 ```
 
 Functions provided by `dplyr` support both options that we just covered. It's up to your preference. However, in this demo we will use the pipe operator to familiarize you with its use.
@@ -95,13 +95,50 @@ newData%>%
   between(200000, 7500000)
 ```
 
+###Getting rid of NAs and replacing them with values in a vector
+The `coalesce()` function takes multiple vectors and combines places the first non-NA value in the returned vector.
 
+####Usage
+`coalesce(firstVect, ...)`
+
+####Parameters
+* `firstVect`: the base vector. One can take this to be the vector that will be returned with its NA values filled if possible
+* `...`: any vector that is of length 1 or equal to the length of `firstVect`
+
+####Usage
+```{r}
+x <- c(1, 6, NA, 3, NA, 4, 2, NA, 5)
+y <- c(NA, 2, 5, NA, 3, NA, 6, 4, 1)
+coalesce(x, y)
+coalesce(y, x)
+```
+
+###`arrange()`, but backwards!
+`desc()` is a function that is pretty straightforward. It takes every value in the vector and flips the sign. When this function is used in conjunction with `arrange()`, the vector returned by arrange is sorted in reverse order.
+
+####Usage
+`desc(vec)`
+
+####Parameters
+* `vec`: a vector to reverse the signage of each element
+
+####Examples
+```{r}
+head(worldCountries1$Phones..per.1000.)
+desc(worldCountries1$Phones..per.1000.) %>%
+  head
+```
+
+###
 ##Datasets provided by `dplyr`
 These datasets are bundled with the `dplyr` package for testing and manipulating.
 
 * `band_members`
 * `band_instruments`
 * `band_instruments2`
+* `nasa`
+* `starwars`
+* `storms`
 
 ##Other functions not covered
 
@@ -110,14 +147,11 @@ arrange_all
 as.table.tbl_cube
 as.tbl_cube
 auto_copy
-between
 bind
 case_when
-coalesce
 compute
 copy_to
 cumall
-desc
 distinct
 do
 dr_dplyr
@@ -135,7 +169,6 @@ join.tbl_df
 lead-lag
 mutate
 n
-nasa
 na_if
 near
 nth
@@ -154,8 +187,6 @@ setops
 slice
 sql
 src_dbi
-starwars
-storms
 summarise
 summarise_all
 tally

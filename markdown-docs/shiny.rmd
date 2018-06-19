@@ -1,0 +1,49 @@
+---
+title: 'Building web applications with `shiny` and RStudio Connect'
+author: "Shiv Sundar"
+date: "June 18, 2018"
+runtime: shiny
+output: html_document
+
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(shiny)
+```
+
+#Introduction
+In this demo, we will cover how to use `shiny` and RStudio Connect, and the purpose of each.
+
+##`shiny`
+###Types of inputs available in Shiny
+In the `shiny` package, there are 14 total UI components that one can use. These are:
+
+* `actionButton()`
+* `actionLink()`
+* `checkboxGroupInput()`
+* `checkboxInput()`
+* `dateInput()`
+* `dateRangeInput()`
+* `fileInput()`
+* `numericInput()`
+* `passwordInput()`
+* `radioInput()`
+* `selectInput()`
+* `sliderInput()`
+* `submitButton()`
+* `textInput()`
+
+For example, here we can see the implementation of a application that displays the selected date.
+```{r, eval = FALSE}
+dateInput("calendar", label = "Choose date to display")
+renderText({as.character(input$calendar)})
+```
+
+```{r, echo = FALSE}
+dateInput("calendar", label = "Choose date to display")
+renderText({as.character(input$calendar)})
+```
+
+##RStudio Connect
+###What is RStudio Connect?
+RStudio Connect is a service that does more than `shiny`.

@@ -12,11 +12,16 @@ library(shiny)
 ```
 
 #Introduction
-In this demo, we will cover how to use `shiny` and RStudio Connect, and the purpose of each.
+In this demo, we will cover how to use `shiny` and the differences between RStudio Connect and the [shinyapps.io](https://www.shinyapps.io) service.
 
 ##`shiny`
+`shiny` is a package used to quickly build web applications.
+
+###Accessing data in `shiny`
+`shiny` stores all objects in a vector called `input`. For example, if one creates an input object with the object id `button2`, then that object's value can be accessed by calling `input$button2`.
+
 ###Types of inputs available in Shiny
-In the `shiny` package, there are 14 total UI components that one can use. These are:
+In the `shiny` package, there are 14 total UI input components that one can use. These are:
 
 * `actionButton()`
 * `actionLink()`
@@ -33,7 +38,8 @@ In the `shiny` package, there are 14 total UI components that one can use. These
 * `submitButton()`
 * `textInput()`
 
-For example, here we can see the implementation of a application that displays the selected date.
+For example, here we can see the implementation of a application that displays the selected date. Selecting a date updates the text to display what was selected.
+
 ```{r, eval = FALSE}
 dateInput("calendar", label = "Choose date to display")
 renderText({as.character(input$calendar)})
@@ -44,6 +50,12 @@ dateInput("calendar", label = "Choose date to display")
 renderText({as.character(input$calendar)})
 ```
 
-##RStudio Connect
-###What is RStudio Connect?
-RStudio Connect is a service that does more than `shiny`.
+RStudio Connect is a service that does more than `shinyapps.io`. While `shinyapps.io` is used to quickly get an app on the web, RStudio Connect is aimed at building a full-fledged website and 
+
+##What is `shinyapps.io`?
+`shinyapps.io` is a service that aims to get your interactive web application published as soon as possible. It only offers support for applications and has limited authentication features. 
+
+##What is RStudio Connect?
+RStudio Connect is a service provided by RStudio. It is focused on publishing multiple file types, including Shiny applications and R Markdown reports enhanced with Shiny.
+
+##What are the differences between the two?

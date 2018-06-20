@@ -38,16 +38,18 @@ In the `shiny` package, there are 14 total UI input components that one can use.
 * `submitButton()`
 * `textInput()`
 
+`shiny` also has many output components. These can be 
+
 For example, here we can see the implementation of a application that displays the selected date. Selecting a date updates the text to display what was selected.
 
 ```{r, eval = FALSE}
 dateInput("calendar", label = "Choose date to display")
-renderText({as.character(input$calendar)})
+renderText({paste("Selected Date: ", as.character(input$calendar), sep = "")})
 ```
 
 ```{r, echo = FALSE}
 dateInput("calendar", label = "Choose date to display")
-renderText({as.character(input$calendar)})
+renderText({paste("Selected Date: ", as.character(input$calendar), sep = "")})
 ```
 
 RStudio Connect is a service that does more than `shinyapps.io`. While `shinyapps.io` is used to quickly get an app on the web, RStudio Connect is aimed at building a full-fledged website and 
@@ -59,3 +61,9 @@ RStudio Connect is a service that does more than `shinyapps.io`. While `shinyapp
 RStudio Connect is a service provided by RStudio. It is focused on publishing multiple file types, including Shiny applications and R Markdown reports enhanced with Shiny.
 
 ##What are the differences between the two?
+`shinyapps.io` | RStudio Connect
+-------------- | --------------
+Support for Shiny apps only | Support for Shiny apps, RMarkdowns, and more
+Focused on simple development | Provides a robust framework for publishing
+Used by smaller applications | Used by academic institutions and companies
+Free tier exists | Basic service costs $15,000

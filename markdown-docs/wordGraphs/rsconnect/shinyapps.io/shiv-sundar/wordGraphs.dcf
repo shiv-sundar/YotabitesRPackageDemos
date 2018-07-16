@@ -1,0 +1,12 @@
+name: wordGraphs
+title: wordGraphs
+username:
+account: shiv-sundar
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 364700
+bundleId: 1483202
+url: https://shiv-sundar.shinyapps.io/wordGraphs/
+when: 1531773244.72757
+asMultiple: FALSE
+asStatic: FALSE

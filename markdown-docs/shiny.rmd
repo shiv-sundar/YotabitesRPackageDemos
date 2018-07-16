@@ -14,8 +14,22 @@ library(shiny)
 #Introduction
 In this demo, we will cover how to use `shiny` and the differences between RStudio Connect and the [shinyapps.io](https://www.shinyapps.io) service.
 
+##What is `shinyapps.io`?
+`shinyapps.io` is a service that aims to get your interactive web application published as soon as possible. It only offers support for applications and has limited authentication features. 
+
+##What is RStudio Connect?
+RStudio Connect is a service provided by RStudio. It is focused on publishing multiple file types, including Shiny applications and R Markdown reports enhanced with Shiny.
+
+##What are the differences between the two?
+`shinyapps.io` | RStudio Connect
+-------------- | --------------
+Support for Shiny apps only | Support for Shiny apps, RMarkdowns, and more
+Focused on simple development | Provides a robust framework for publishing
+Used by smaller applications | Used by academic institutions and companies
+Free tier exists | Basic service costs $15,000
+
 ##`shiny`
-`shiny` is a package used to quickly build web applications.
+`shiny` is a package used to build web applications in R. 
 
 ###Accessing data in `shiny`
 `shiny` stores all objects in a vector called `input`. For example, if one creates an input object with the object id `button2`, then that object's value can be accessed by calling `input$button2`.
@@ -38,9 +52,19 @@ In the `shiny` package, there are 14 total UI input components that one can use.
 * `submitButton()`
 * `textInput()`
 
-`shiny` also has many output components. These can be 
+`shiny` also has some output components. These can be:
+
+* `dataTableOutput()`
+* `plotOutput()`
+* `verbatimTextOutput()`
+* `tableOutput()`
+* `textOutput()`
+* `uiOutput()`
+* `htmlOutput()`
 
 For example, here we can see the implementation of a application that displays the selected date. Selecting a date updates the text to display what was selected.
+
+***
 
 ```{r, eval = FALSE}
 dateInput("calendar", label = "Choose date to display")
@@ -52,18 +76,79 @@ dateInput("calendar", label = "Choose date to display")
 renderText({paste("Selected Date: ", as.character(input$calendar), sep = "")})
 ```
 
-RStudio Connect is a service that does more than `shinyapps.io`. While `shinyapps.io` is used to quickly get an app on the web, RStudio Connect is aimed at building a full-fledged website and 
+***
 
-##What is `shinyapps.io`?
-`shinyapps.io` is a service that aims to get your interactive web application published as soon as possible. It only offers support for applications and has limited authentication features. 
+##Building a Shiny app and publishing it on `shinyapps.io`
 
-##What is RStudio Connect?
-RStudio Connect is a service provided by RStudio. It is focused on publishing multiple file types, including Shiny applications and R Markdown reports enhanced with Shiny.
+Now that we know the basics of `shiny` and its concepts, let's build and publish our very own Shiny app! First let's start adding our `shinyapps.io` account to our R session. To do this, follow the steps below.
 
-##What are the differences between the two?
-`shinyapps.io` | RStudio Connect
--------------- | --------------
-Support for Shiny apps only | Support for Shiny apps, RMarkdowns, and more
-Focused on simple development | Provides a robust framework for publishing
-Used by smaller applications | Used by academic institutions and companies
-Free tier exists | Basic service costs $15,000
+***
+
+First, you need to make sure `rsconnect` is installed and the library is added to your session.
+
+```{r, eval = FALSE}
+install.packages('rsconnect')
+library(rsconnect)
+```
+
+Now we connect our account to our current R session. Place the relevant information in each field marked by "<>". Alternatively, you can copy the text from your `shinyapps.io` account dashboard. This command should be run in the console.
+
+```{r, eval = FALSE}
+rsconnect::setAccountInfo(name="<username>",
+			  token="<public token>",
+			  secret="<secret token>")
+```
+
+```{r, echo = FALSE}
+keys <- read.delim("r-keys.txt", header = FALSE, sep = " ", stringsAsFactors = FALSE)
+rsconnect::setAccountInfo(name=keys$V1,
+			  token = keys$V2,
+			  secret = keys$V3)
+```
+
+We will build an app that can take a .txt file, be provided the word delimiters, and then display the average length of the words. We will also add a graph that shows the frequency of word lengths. First, we need to create a new Shiny app and we can do this by clicking on File -> New File -> Shiny Web App.
+
+Let's get all the code and then explain it. 
+
+```{r, eval = FALSE}
+library(shiny)
+library(ggplot2)
+
+ui <- fluidPage(
+  titlePanel("Simple .txt file data"),
+  mainPanel(
+    textInput("delimiter", "Input word delimiter"),
+    fileInput("fileInput", "Choose .txt file", accept = c("text/plain")),
+    actionButton("fileChosen", "Analyze!"),
+    textOutput("avgLen"),
+    plotOutput("wordLCount")
+  )
+)
+
+server <- function(input, output) {
+  data <- reactive({
+    textFile <- scan(as.character(input$fileInput$datapath),
+                     what = "",
+                     sep = input$delimiter)
+    
+    return(textFile)
+  })
+  
+  observeEvent(input$fileChosen, {
+    print(sum(nchar(data(), "chars"))/length(data()))
+    output$avgLen <- renderText({
+      newData <- data()
+      paste("Average length of words in file:", sum(nchar(newData, "chars"))/length(newData))})
+    
+    output$wordLCount <- renderPlot({
+      vals <- as.data.frame(table(nchar(data(), "chars")))
+      ggplot(vals, aes(Var1, Freq)) +
+        labs(y = "Number of Occurrences", x = "Length of Word") +
+        geom_bar(stat = "identity")
+    })
+  })
+}
+
+shinyApp(ui = ui, server = server)
+```
+

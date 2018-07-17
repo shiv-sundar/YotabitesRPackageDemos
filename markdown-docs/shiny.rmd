@@ -79,34 +79,7 @@ renderText({paste("Selected Date: ", as.character(input$calendar), sep = "")})
 
 ***
 
-##Building a Shiny app and publishing it on `shinyapps.io`
-
-Now that we know the basics of `shiny` and its concepts, let's build and publish our very own Shiny app! First let's start adding our `shinyapps.io` account to our R session. To do this, follow the steps below.
-
-***
-
-First, you need to make sure `rsconnect` is installed and the library is added to your session.
-
-```{r, eval = FALSE}
-install.packages('rsconnect')
-library(rsconnect)
-```
-
-Now we connect our account to our current R session. Place the relevant information in each field marked by "". Alternatively, you can copy the text from your `shinyapps.io` account dashboard. This command should be run in the console.
-
-```{r, eval = FALSE}
-rsconnect::setAccountInfo(name="username",
-                          token="public token",
-                          secret="secret token")
-```
-
-```{r, eval = FALSE, echo = FALSE}
-keys <- read.delim("r-keys.txt", header = FALSE, sep = " ", stringsAsFactors = FALSE)
-rsconnect::setAccountInfo(name=keys$V1,
-                          token = keys$V2,
-                          secret = keys$V3)
-```
-
+##Building a Shiny app
 We will build an app that can take a .txt file, be provided the word delimiters, and then display the average length of the words. We will also add a graph that shows the frequency of word lengths. First, we need to create a new Shiny app and we can do this by clicking on File -> New File -> Shiny Web App.
 
 Let's get all the code and then explain it. 
@@ -152,7 +125,7 @@ Let's get all the code and then explain it.
 * Line `2` is the title of the app.
 * Line `3` creates the main panel of the app.
 * Line `4` creates a `textInput` object with the `outputId` being `"delimiter"`. The help text in this object asks the user to enter the delimiter for the file being analyzed.
-* Line `5` creates a `fileInput` object with an `outputId` of `"fileInput"`. The title of this `fileInput` is `"Choose .txt file"`. Lastly, this `fileInput` will accept only `.txt` files.
+* Line `5` creates a `fileInput` object with an `outputId` of `"fileInput"`. The title of this `fileInput` is `"Choose .txt file"`. Lastly, this `fileInput` will accept only `.txt` files. It is worth noting that the restriction of file types will only work once the app is published.
 * Line `6` creates an `actionButton`. The `outputId` is `"fileChosen"` and the text on this button is `"Analyze!"`. This is the trigger that will be used to build the analysis.
 * Line `7` creates a placeholder for text pulled from the `output$avgLen` object.
 * Line `8` creates a placeholder for a plot taken from the `output$wordLCount` object.
@@ -209,3 +182,30 @@ shinyApp(
 )
 ```
 
+##Publishing the app on `shinyapps.io`
+To publish our newly created app, we first need to create an account. You can do this by visiting [this link](https://www.shinyapps.io/admin/#/signup) to sign up. 
+
+Now, we need to add our `shinyapps.io` account to our R session. To do this, follow the steps below.
+
+***
+
+Make sure `rsconnect` is installed and the library is added to your session. These commands should be run in the console.
+
+```{r, eval = FALSE}
+install.packages('rsconnect')
+library(rsconnect)
+```
+
+Now we connect our account to our current R session. Place the relevant information in each field marked by "". Alternatively, you can copy the text from your `shinyapps.io` account dashboard. This command should be run in the console.
+
+```{r, eval = FALSE}
+rsconnect::setAccountInfo(name="username",
+                          token="public token",
+                          secret="secret token")
+```
+
+After doing this, run the following command to publish the currently open app to `shinyapps.io`.
+
+```{r, eval = FALSE}
+deployApp()
+```

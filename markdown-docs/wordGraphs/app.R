@@ -22,7 +22,6 @@ server <- function(input, output) {
   })
   
   observeEvent(input$fileChosen, {
-    print(sum(nchar(data(), "chars"))/length(data()))
     output$avgLen <- renderText({
       newData <- data()
       paste("Average length of words in file:", sum(nchar(newData, "chars"))/length(newData))})
